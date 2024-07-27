@@ -13,10 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.joselaine.hidratamais.ui.theme.BluePrimary
+import com.joselaine.hidratamais.ui.theme.BlueSecondary
 import com.joselaine.hidratamais.ui.theme.HidrataMaisTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,13 +41,13 @@ fun HidrataMaisApp() {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Hidrata+",
+                        text = stringResource(R.string.name_app_title),
                         color = Color.White,
                         fontSize = 20.sp
                     )
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF4682B4) // Azul mais escuro para a Toolbar
+                    containerColor = BluePrimary
                 )
             )
         },
@@ -52,7 +55,7 @@ fun HidrataMaisApp() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFF87CEFA)) // Fundo azul claro
+                    .background(BlueSecondary)
                     .padding(paddingValues)
             ) {
                 Spacer(modifier = Modifier.height(32.dp))
@@ -75,11 +78,12 @@ fun NotificationContent() {
         Image(
             painter = painterResource(id = R.drawable.baseline_water_drop_24),
             contentDescription = null,
-            modifier = Modifier.size(150.dp)
+            modifier = Modifier
+                .size(150.dp)
                 .padding(bottom = 10.dp)
         )
         Text(
-            text = "Insira o intervalo de notificação (minutos):",
+            text = stringResource(R.string.subtitle_home_screen),
             fontSize = 18.sp,
             color = Color.White
         )
@@ -94,13 +98,11 @@ fun NotificationContent() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4682B4)), // Cor do botão igual à da Toolbar
-            onClick = {
-                // Ação para notificar
-            },
+            colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
+            onClick = {},
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text(text = "Me notificar")
+            Text(text = stringResource(R.string.button_text))
         }
     }
 }
