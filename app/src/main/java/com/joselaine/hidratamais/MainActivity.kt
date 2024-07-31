@@ -27,7 +27,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             HidrataMaisTheme {
-                HidrataMaisApp()
+                HidrataMaisApp {
+
+                }
             }
         }
     }
@@ -35,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HidrataMaisApp() {
+fun HidrataMaisApp(onClick: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -59,14 +61,14 @@ fun HidrataMaisApp() {
                     .padding(paddingValues)
             ) {
                 Spacer(modifier = Modifier.height(32.dp))
-                NotificationContent()
+                NotificationContent(onClick)
             }
         }
     )
 }
 
 @Composable
-fun NotificationContent() {
+fun NotificationContent(onClick: () -> Unit) {
     val intervalState = remember { mutableStateOf(TextFieldValue()) }
 
     Column(
@@ -80,7 +82,7 @@ fun NotificationContent() {
             contentDescription = null,
             modifier = Modifier
                 .size(150.dp)
-                .padding(bottom = 10.dp)
+
         )
         Text(
             text = stringResource(R.string.subtitle_home_screen),
@@ -99,7 +101,7 @@ fun NotificationContent() {
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
-            onClick = {},
+            onClick = { onClick() },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(text = stringResource(R.string.button_text))
@@ -110,5 +112,5 @@ fun NotificationContent() {
 @Preview
 @Composable
 private fun HidrataMaisAppPreview() {
-    HidrataMaisApp()
+    HidrataMaisApp({})
 }
