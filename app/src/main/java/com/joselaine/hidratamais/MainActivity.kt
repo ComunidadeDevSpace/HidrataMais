@@ -36,18 +36,32 @@ class MainActivity : ComponentActivity() {
         setContent {
             HidrataMaisTheme {
                 val context = LocalContext.current
-                HidrataMaisApp {
+                HidrataMaisApp { textFieldValue ->
                     val workManager = WorkManager.getInstance(context)
                     val constraints = Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.CONNECTED)
                         .build()
 
-                    val repeatingRequest = PeriodicWorkRequestBuilder<NotificationWorker>(15, TimeUnit.MINUTES)
-                        .setConstraints(constraints)
-                        .build()
+                    val interval = try {
+                        //caso o usuário digite algum valor que não
+                        // possa ser convertido em Long
+                        textFieldValue.text.toLong()
+                    } catch (e: NumberFormatException){
+                        //usaremos o valor padrão (15 minutos)
+                        15
+                    }
+
+                    val repeatingRequest =
+                        PeriodicWorkRequestBuilder<NotificationWorker>(interval, TimeUnit.MINUTES)
+                            .setConstraints(constraints)
+                            .build()
 
                     val workId = UUID.randomUUID().toString()
-                    workManager.enqueueUniquePeriodicWork(workId, ExistingPeriodicWorkPolicy.KEEP, repeatingRequest)
+                    workManager.enqueueUniquePeriodicWork(
+                        workId,
+                        ExistingPeriodicWorkPolicy.KEEP,
+                        repeatingRequest
+                    )
                 }
             }
         }
@@ -56,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HidrataMaisApp(onClick: () -> Unit) {
+fun HidrataMaisApp(onClick: (textField: TextFieldValue) -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -87,7 +101,7 @@ fun HidrataMaisApp(onClick: () -> Unit) {
 }
 
 @Composable
-fun NotificationContent(onClick: () -> Unit) {
+fun NotificationContent(onClick: (textField: TextFieldValue) -> Unit) {
     val intervalState = remember { mutableStateOf(TextFieldValue()) }
 
     Column(
@@ -120,7 +134,7 @@ fun NotificationContent(onClick: () -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
-            onClick = { onClick() },
+            onClick = { onClick(intervalState.value) },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(text = stringResource(R.string.button_text))
